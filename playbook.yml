@@ -1,0 +1,79 @@
+---
+- hosts: all
+  become: yes
+  remote_user: devops_user #replace with yours defined in terraform variable user
+
+  tasks:
+  - name: Install epel
+    yum:
+      name: epel-release
+      state: present
+
+
+#  - name: Ensure ntp is running.
+#    service:
+#      name: ntp
+#      state: started
+#      enabled: yes
+
+- hosts: app
+  become: yes
+  remote_user: devops_user #replace with yours defined in terraform variable user
+
+  tasks:
+  - name: Install httpd
+    yum:
+      name: httpd
+      state: present
+
+  - name: Enable httpd service on every boot
+    service: name=httpd state=started enabled=yes
+
+- hosts: db
+  become: yes
+  remote_user: devops_user
+
+  tasks:
+  - name: Add repo for Mysql
+    shell: |
+          wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+          sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
+          yum update
+
+  - name: Install MySQL server
+    yum:
+      name: mysql-server
+      state: present
+
+  - name: Install PyMySQL
+    yum:
+      name: python36-PyMySQL
+      state: present
+
+  - name: Start mysql
+    service: name=mysqld state=started enabled=yes
+
+  - name: Create empty DataBase
+    mysql_db: name=testdb state=present
+#    shell: |
+#         mysql
+#         CREATE DATABASE empty_database;
+
+- hosts: all
+  become: yes
+  remote_user: devops_user
+
+  tasks:
+  - name: Add user student, group - hillel, password - student_pass
+    shell: |
+          sudo adduser student
+          sudo passwd student student_pass
+          sudo groupadd hillel
+          sudo usermod -aG hillel student
+#          echo "student  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/student
+
+#  - name: Ensure nginx is running.
+#    service:
+#      name: nginx
+#      state: started
+#      enabled: yes

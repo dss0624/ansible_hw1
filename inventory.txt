@@ -1,0 +1,12 @@
+[app]
+serv1 ansible_host=65.108.149.82  ansible_user=root ansible_password=Orest_2Stephan
+
+[db]
+serv2 ansible_host=95.216.160.254 ansible_user=root ansible_password=Orest_2Stephan
+
+[env]
+serv3 ansible_host=65.108.93.218 ansible_user=root ansible_password=Orest_2Stephan
+
+[env:children]
+app
+db

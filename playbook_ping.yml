@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: yes
+  #remote_user: root #replace with yours defined in terraform variable user
+
+  tasks:
+  - name: Ping my servers
+    ping:
+
+
+
+#  - name: Ensure ntp is running.
+#    service:
+#      name: ntp
+#      state: started
+#      enabled: yes
+
+#- hosts: web
+#  become: yes
+#  remote_user: devops_user #replace with yours defined in terraform variable user
+
+#  tasks:
+#  - name: Ensure nginx is installed.
+#    apt:
+#      name: nginx
+#      state: present
+
+#  - name: Ensure nginx is running.
+#    service:
+#      name: nginx
+#      state: started
+#      enabled: yes
