@@ -1,7 +1,15 @@
 ---
 - hosts: all
   become: yes
-  remote_user: devops_user #replace with yours defined in terraform variable user
+  vars:
+   - remote_user: devops_user
+
+#  remote_user: devops_user #replace with yours defined in terraform variable user
+
+  #tasks:
+  #   - name: print variables
+  #     debug:
+  #     msg: "remote_user: {{ remote_user}}"
 
   tasks:
   - name: Install epel
@@ -35,15 +43,19 @@
 
   tasks:
   - name: Add repo for Mysql
-    shell: |
-          wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
-          sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
-          yum update
+    yum_repository:
+      name: mysql
+      description: install mysql
+      baseurl: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+#    shell: |
+#          wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+#          sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
+#          yum update
 
-  - name: Install MySQL server
-    yum:
-      name: mysql-server
-      state: present
+#  - name: Install MySQL server
+#    yum:
+#      name: mysql-server
+#      state: present
 
   - name: Install PyMySQL
     yum:
@@ -53,8 +65,8 @@
   - name: Start mysql
     service: name=mysqld state=started enabled=yes
 
-  - name: Create empty DataBase
-    mysql_db: name=testdb state=present
+#  - name: Create empty DataBase
+#    mysql_db: name=testdb state=present
 
 
 - hosts: all
